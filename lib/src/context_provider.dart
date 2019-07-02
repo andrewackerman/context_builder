@@ -22,8 +22,11 @@ class ContextProvider extends StatelessWidget {
   final double baseIconSize;
   final Widget child;
 
-  static LayoutContext of(BuildContext context) {
-    final inheritedContext = context.inheritFromWidgetOfExactType(_InheritedContext) as _InheritedContext;
+  static LayoutContext of(BuildContext context, {bool notifyChanges = true}) {
+    final inheritedContext = notifyChanges
+      ? context.inheritFromWidgetOfExactType(_InheritedContext) as _InheritedContext
+      : context.ancestorInheritedElementForWidgetOfExactType(_InheritedContext)?.widget as _InheritedContext;
+
     return inheritedContext?.layoutContext;
   }
 
@@ -37,7 +40,6 @@ class ContextProvider extends StatelessWidget {
       baseFontSize: baseFontSize,
       baseIconSize: baseIconSize,
       builder: (_, layoutContext) {
-        print('rebuild');
         return _InheritedContext(
           layoutContext: layoutContext,
           child: child,
@@ -57,7 +59,6 @@ class _InheritedContext extends InheritedWidget {
 
   @override
   bool updateShouldNotify(_InheritedContext oldWidget) {
-    print('should notify: ${layoutContext != oldWidget.layoutContext}');
     if (layoutContext != oldWidget.layoutContext) {
       return true;
     }

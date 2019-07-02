@@ -1,4 +1,4 @@
-import 'package:context_builder/src/context.dart';
+import 'package:context_builder/src/layout_context.dart';
 import 'package:flutter/widgets.dart';
 
 class ContextBuilder extends StatefulWidget {
