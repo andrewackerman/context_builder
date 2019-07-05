@@ -1,4 +1,5 @@
 import 'dart:math' as Math;
+import 'dart:ui';
 
 import 'helpers/platform_helper_interface.dart'
   if (dart.library.io) 'helpers/platform_helper_vm.dart'
@@ -66,38 +67,55 @@ class LayoutContext {
     double scaleDimensionSize;
     double ratio;
 
-    switch (scaleBehavior) {
-      case ScaleBehavior.width:
-        scaleDimensionSize = mediaQuery.orientation == Orientation.portrait ? screenSize.width : screenSize.height;
-        ratio = scaleDimensionSize / baseWidth;
-        break;
-      case ScaleBehavior.height:
-        scaleDimensionSize = mediaQuery.orientation == Orientation.portrait ? screenSize.height : screenSize.width;
-        ratio = scaleDimensionSize / baseHeight;
-        break;
-      case ScaleBehavior.horizontal:
-        scaleDimensionSize = screenSize.width;
-        ratio = scaleDimensionSize / (mediaQuery.orientation == Orientation.portrait ? baseWidth : baseHeight);
-        break;
-      case ScaleBehavior.vertical:
-        scaleDimensionSize = screenSize.height;
-        ratio = scaleDimensionSize / (mediaQuery.orientation == Orientation.portrait ? baseHeight : baseWidth);
-        break;
-      case ScaleBehavior.minimum:
-        scaleDimensionSize = Math.min(screenSize.width, screenSize.height);
-        ratio = scaleDimensionSize / Math.min(baseWidth, baseHeight);
-        break;
-      case ScaleBehavior.maximum:
-        scaleDimensionSize = Math.max(screenSize.width, screenSize.height);
-        ratio = scaleDimensionSize / Math.max(baseWidth, baseHeight);
-        break;
+    if (os == OperatingSystem.android || os == OperatingSystem.ios) {
+      switch (scaleBehavior) {
+        case ScaleBehavior.width:
+          scaleDimensionSize = mediaQuery.orientation == Orientation.portrait ? screenSize.width : screenSize.height;
+          ratio = scaleDimensionSize / baseWidth;
+          break;
+        case ScaleBehavior.height:
+          scaleDimensionSize = mediaQuery.orientation == Orientation.portrait ? screenSize.height : screenSize.width;
+          ratio = scaleDimensionSize / baseHeight;
+          break;
+        case ScaleBehavior.horizontal:
+          scaleDimensionSize = screenSize.width;
+          ratio = scaleDimensionSize / (mediaQuery.orientation == Orientation.portrait ? baseWidth : baseHeight);
+          break;
+        case ScaleBehavior.vertical:
+          scaleDimensionSize = screenSize.height;
+          ratio = scaleDimensionSize / (mediaQuery.orientation == Orientation.portrait ? baseHeight : baseWidth);
+          break;
+        case ScaleBehavior.minimum:
+          scaleDimensionSize = Math.min(screenSize.width, screenSize.height);
+          ratio = scaleDimensionSize / Math.min(baseWidth, baseHeight);
+          break;
+        case ScaleBehavior.maximum:
+          scaleDimensionSize = Math.max(screenSize.width, screenSize.height);
+          ratio = scaleDimensionSize / Math.max(baseWidth, baseHeight);
+          break;
+      }
+    } else {
+      switch (scaleBehavior) {
+        case ScaleBehavior.width:
+        case ScaleBehavior.horizontal:
+          scaleDimensionSize = screenSize.width;
+          ratio = scaleDimensionSize / baseWidth;
+          break;
+        case ScaleBehavior.height:
+        case ScaleBehavior.vertical:
+          scaleDimensionSize = screenSize.height;
+          ratio = scaleDimensionSize / baseHeight;
+          break;
+        case ScaleBehavior.minimum:
+          scaleDimensionSize = Math.min(screenSize.width, screenSize.height);
+          ratio = scaleDimensionSize / Math.min(baseWidth, baseHeight);
+          break;
+        case ScaleBehavior.maximum:
+          scaleDimensionSize = Math.max(screenSize.width, screenSize.height);
+          ratio = scaleDimensionSize / Math.max(baseWidth, baseHeight);
+          break;
+      }
     }
-
-    // if (mediaQuery.orientation == Orientation.portrait) {
-    //   screenWidth = screenSize.width;
-    // } else {
-    //   screenWidth = screenSize.height;
-    // }
 
     return LayoutContext._(
       os: os,

@@ -40,18 +40,6 @@ class ContextBuilderState extends State<ContextBuilder> implements WidgetsBindin
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    refreshContext();
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(ContextBuilder oldWidget) {
-    refreshContext();
-    super.didUpdateWidget(oldWidget);
-  }
-
   void refreshContext() {
     bool needsRefresh = false;
     if (_layoutContext == null) {
@@ -84,22 +72,38 @@ class ContextBuilderState extends State<ContextBuilder> implements WidgetsBindin
   }
 
   @override
+  void didChangeDependencies() {
+    print('didChangeDependencies');
+    refreshContext();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void didUpdateWidget(ContextBuilder oldWidget) {
+    print('didUpdateWidget');
+    refreshContext();
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
   void didChangeMetrics() {
+    print('didChangeMetrics');
     refreshContext();
   }
 
   @override
   void didChangeTextScaleFactor() {
+    print('didChangeTextScaleFactor');
     if (widget.scaleOffset == null) {
       refreshContext();
     }
   }
 
-  @override void didChangeAccessibilityFeatures() { }
-  @override void didChangeAppLifecycleState(AppLifecycleState state) { }
-  @override void didChangeLocales(List<Locale> locale) { }
-  @override void didChangePlatformBrightness() { }
-  @override void didHaveMemoryPressure() { }
+  @override void didChangeAccessibilityFeatures() {print('didChangeAccessibilityFeatures'); }
+  @override void didChangeAppLifecycleState(AppLifecycleState state) {print('didChangeAppLifecycleState'); }
+  @override void didChangeLocales(List<Locale> locale) {print('didChangeLocales'); }
+  @override void didChangePlatformBrightness() {print('didChangePlatformBrightness'); }
+  @override void didHaveMemoryPressure() {print('didHaveMemoryPressure'); }
   @override Future<bool> didPopRoute() => null; 
   @override Future<bool> didPushRoute(String route) => null;
 }
