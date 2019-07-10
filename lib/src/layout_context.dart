@@ -26,11 +26,26 @@ enum ScaleBehavior {
   maximum,
 }
 
+// Values taken from bootstrap
+const double _smallSizeCategoryWidthThreshold = 576;
+const double _mediumSizeCategoryWidthThreshold = 768;
+const double _largeSizeCategoryWidthThreshold = 992;
+const double _xlargeSizeCategoryWidthThreshold = 1200;
+
+enum SizeCategory {
+  xsmall,
+  small,
+  medium,
+  large,
+  xlarge,
+}
+
 class LayoutContext {
   LayoutContext._({
     this.os,
     this.screenSize,
     this.rawScreenSize,
+    this.sizeCategory,
     this.orientation,
     this.scaleBehavior,
     this.scaleRatio,
@@ -93,16 +108,25 @@ class LayoutContext {
         break;
     }
 
-    // if (mediaQuery.orientation == Orientation.portrait) {
-    //   screenWidth = screenSize.width;
-    // } else {
-    //   screenWidth = screenSize.height;
-    // }
+    double rawDimensionSize = scaleDimensionSize * mediaQuery.devicePixelRatio;
+    SizeCategory category;
+    if (rawDimensionSize >= _xlargeSizeCategoryWidthThreshold) {
+      category = SizeCategory.xlarge;
+    } else if (rawDimensionSize >= _largeSizeCategoryWidthThreshold) {
+      category = SizeCategory.large;
+    } else if (rawDimensionSize >= _mediumSizeCategoryWidthThreshold) {
+      category = SizeCategory.medium;
+    } else if (rawDimensionSize >= _smallSizeCategoryWidthThreshold) {
+      category = SizeCategory.small;
+    } else {
+      category = SizeCategory.xsmall;
+    }
 
     return LayoutContext._(
       os: os,
       screenSize: screenSize,
       rawScreenSize: screenSize * mediaQuery.devicePixelRatio,
+      sizeCategory: category,
       orientation: mediaQuery.orientation,
       scaleBehavior: scaleBehavior,
       scaleRatio: ratio,
@@ -116,6 +140,7 @@ class LayoutContext {
   final OperatingSystem os;
   final Size screenSize;
   final Size rawScreenSize;
+  final SizeCategory sizeCategory;
   final Orientation orientation;
   final double scaleDimensionSize;
   final ScaleBehavior scaleBehavior;
@@ -130,6 +155,7 @@ class LayoutContext {
       return os == other.os &&
              screenSize == other.screenSize &&
              rawScreenSize == other.rawScreenSize &&
+             sizeCategory == other.sizeCategory &&
              orientation == other.orientation &&
              scaleDimensionSize == other.scaleDimensionSize &&
              scaleBehavior == other.scaleBehavior &&

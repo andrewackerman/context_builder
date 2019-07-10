@@ -74,6 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
             'Raw Screen Size: ${ctx.rawScreenSize}',
           ),
           Text(
+            'Size Category: ${ctx.sizeCategory}',
+          ),
+          Text(
             'Orientation: ${ctx.orientation}',
           ),
           SizedBox(height: 16),
